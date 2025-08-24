@@ -19,7 +19,7 @@ class NoteRepositoryTest {
 
     @Test
     void save_shouldAddNote() {
-        Note note = new Note("Title", "Content");
+        Note note = new Note("Content");
         Note saved = noteRepository.save(note);
 
         assertEquals(note, saved);
@@ -28,7 +28,7 @@ class NoteRepositoryTest {
 
     @Test
     void findById_shouldReturnNoteIfExists() {
-        Note note = new Note("Title", "Content");
+        Note note = new Note( "Content");
         noteRepository.save(note);
         String id = "123";
         note.setIdNote(id);
@@ -36,14 +36,5 @@ class NoteRepositoryTest {
         Optional<Note> found = noteRepository.findById(id);
         assertTrue(found.isPresent());
         assertEquals(note, found.get());
-    }
-
-    @Test
-    void delete_shouldRemoveNote() {
-        Note note = new Note("Title", "Content");
-        noteRepository.save(note);
-        noteRepository.delete(note);
-
-        assertTrue(noteRepository.findAll().isEmpty());
     }
 }

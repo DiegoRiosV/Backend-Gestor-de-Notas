@@ -22,7 +22,7 @@ class NoteServiceTest {
 
     @Test
     void saveNote_shouldGenerate10CharIdAndSave() {
-        Note note = new Note("Test Title", "Test Content");
+        Note note = new Note("Test Content");
         Note saved = noteService.saveNote(note);
 
         // Verificar que se generó id de 10 caracteres
@@ -33,15 +33,13 @@ class NoteServiceTest {
         List<Note> allNotes = noteService.getAllNotes();
         assertTrue(allNotes.contains(saved));
 
-        // Verificar título y contenido
-        assertEquals("Test Title", saved.getTitle());
         assertEquals("Test Content", saved.getContent());
     }
 
     @Test
     void getAllNotes_shouldReturnAllSavedNotes() {
-        Note note1 = new Note("Title1", "Content1");
-        Note note2 = new Note("Title2", "Content2");
+        Note note1 = new Note("Content1");
+        Note note2 = new Note("Content2");
 
         noteService.saveNote(note1);
         noteService.saveNote(note2);

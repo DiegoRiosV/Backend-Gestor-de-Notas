@@ -24,7 +24,4 @@ public class NoteRepository {
         return notes.stream().filter(n -> n.getIdNote().equals(id)).findFirst();
     }
 
-    public void delete(Note note) {
-        notes.remove(note);
-    }
 }

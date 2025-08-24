@@ -43,7 +43,7 @@ class NoteControllerTest {
             return n;
         });
 
-        Note note = new Note("Test Title", "Test Content");
+        Note note = new Note("Test Content");
 
         mockMvc.perform(post("/api/notes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,15 +51,14 @@ class NoteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.note.idNote").value("1234567890"))
-                .andExpect(jsonPath("$.note.title").value("Test Title"))
                 .andExpect(jsonPath("$.note.content").value("Test Content"));
     }
 
     @Test
     void getAllNotes_shouldReturnListOfNotes() throws Exception {
-        Note note1 = new Note("Title1", "Content1");
+        Note note1 = new Note("Content1");
         note1.setIdNote("id1");
-        Note note2 = new Note("Title2", "Content2");
+        Note note2 = new Note("Content2");
         note2.setIdNote("id2");
 
         when(noteService.getAllNotes()).thenReturn(Arrays.asList(note1, note2));

@@ -3,13 +3,11 @@ package com.model;
 public class Note {
 
     private String idNote;
-    private String title;
     private String content;
 
     public Note() {
     }
-    public Note(String title, String content) {
-        this.title = title;
+    public Note(String content) {
         this.content = content;
     }
 
@@ -18,13 +16,6 @@ public class Note {
     }
     public void setIdNote(String idNote) {
         this.idNote = idNote;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {

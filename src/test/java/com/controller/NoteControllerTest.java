@@ -1,7 +1,8 @@
 package com.controller;
 
-import com.model.Note;
-import com.service.NoteService;
+import com.example.notas.controller.NoteController;
+import com.example.notas.model.Note;
+import com.example.notas.service.NoteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

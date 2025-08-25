@@ -1,8 +1,17 @@
-package com.model;
+package com.example.notas.model;
 
+import jakarta.persistence.*;
+
+
+@Entity
+@Table(name = "notes")
 public class Note {
 
+    @Id 
+    @Column(name = "note_id", length = 10)
     private String idNote;
+
+    @Column(name = "note")
     private String content;
 
     public Note() {

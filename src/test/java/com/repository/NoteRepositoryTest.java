@@ -1,40 +1,49 @@
 package com.repository;
 
-import com.model.Note;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import com.example.notas.model.Note;
+import com.example.notas.repository.NoteRepository;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DataJpaTest 
 class NoteRepositoryTest {
 
+    @Autowired 
     private NoteRepository noteRepository;
 
-    @BeforeEach
-    void setUp() {
-        noteRepository = new NoteRepository();
-    }
 
     @Test
-    void save_shouldAddNote() {
+    void save_shouldSaveNoteAndReturnIt() {
+        // Arrange
         Note note = new Note("Content");
+        note.setIdNote("abcde12345"); 
+
+        // Act
         Note saved = noteRepository.save(note);
 
-        assertEquals(note, saved);
-        assertEquals(1, noteRepository.findAll().size());
+        // Assert
+        assertNotNull(saved);
+        assertEquals("abcde12345", saved.getIdNote());
     }
 
     @Test
     void findById_shouldReturnNoteIfExists() {
-        Note note = new Note( "Content");
-        noteRepository.save(note);
-        String id = "123";
-        note.setIdNote(id);
+        // Arrange
+        Note note = new Note("Content");
+        note.setIdNote("testId1234");
+        noteRepository.save(note); 
 
-        Optional<Note> found = noteRepository.findById(id);
+        // Act
+        Optional<Note> found = noteRepository.findById("testId1234");
+
+        // Assert
         assertTrue(found.isPresent());
-        assertEquals(note, found.get());
+        assertEquals("testId1234", found.get().getIdNote());
     }
 }

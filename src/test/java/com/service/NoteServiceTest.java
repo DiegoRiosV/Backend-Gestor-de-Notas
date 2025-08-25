@@ -1,52 +1,72 @@
 package com.service;
 
-import com.model.Note;
-import com.repository.NoteRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.notas.model.Note;
+import com.example.notas.repository.NoteRepository;
+import com.example.notas.service.NoteService;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class) 
 class NoteServiceTest {
 
-    private NoteService noteService;
+    @Mock 
     private NoteRepository noteRepository;
 
-    @BeforeEach
-    void setUp() {
-        noteRepository = new NoteRepository(); // repositorio temporal
-        noteService = new NoteService(noteRepository);
-    }
+    @InjectMocks 
+    private NoteService noteService;
+
 
     @Test
     void saveNote_shouldGenerate10CharIdAndSave() {
-        Note note = new Note("Test Content");
-        Note saved = noteService.saveNote(note);
+        // Arrange
+        Note noteToSave = new Note("Test Content");
 
-        // Verificar que se generó id de 10 caracteres
+        when(noteRepository.save(any(Note.class))).thenAnswer(invocation -> {
+            Note note = invocation.getArgument(0);
+            assertNotNull(note.getIdNote());
+            assertEquals(10, note.getIdNote().length());
+            return note;
+        });
+
+        // Act
+        Note saved = noteService.saveNote(noteToSave);
+
+        // Assert
         assertNotNull(saved.getIdNote());
         assertEquals(10, saved.getIdNote().length());
-
-        // Verificar que se guardó en repositorio
-        List<Note> allNotes = noteService.getAllNotes();
-        assertTrue(allNotes.contains(saved));
-
         assertEquals("Test Content", saved.getContent());
+
+        verify(noteRepository, times(1)).save(any(Note.class));
     }
 
     @Test
     void getAllNotes_shouldReturnAllSavedNotes() {
+        // Arrange
         Note note1 = new Note("Content1");
+        note1.setIdNote("id1");
         Note note2 = new Note("Content2");
+        note2.setIdNote("id2");
+        List<Note> expectedNotes = List.of(note1, note2);
 
-        noteService.saveNote(note1);
-        noteService.saveNote(note2);
+        when(noteRepository.findAll()).thenReturn(expectedNotes);
 
+        // Act
         List<Note> notes = noteService.getAllNotes();
+
+        // Assert
         assertEquals(2, notes.size());
-        assertTrue(notes.contains(note1));
-        assertTrue(notes.contains(note2));
+        assertEquals(expectedNotes, notes);
+        
+        verify(noteRepository, times(1)).findAll();
     }
 }

@@ -1,7 +1,8 @@
-package com.service;
+package com.example.notas.service;
 
-import com.model.Note;
-import com.repository.NoteRepository;
+import com.example.notas.model.Note;
+import com.example.notas.repository.NoteRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

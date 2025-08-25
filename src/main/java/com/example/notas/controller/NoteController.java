@@ -1,7 +1,8 @@
-package com.controller;
+package com.example.notas.controller;
 
-import com.model.Note;
-import com.service.NoteService;
+import com.example.notas.model.Note;
+import com.example.notas.service.NoteService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

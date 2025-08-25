@@ -28,4 +28,13 @@ public class NoteService {
     public java.util.List<Note> getAllNotes() {
         return noteRepository.findAll();
     }
+
+    public Note updateNote(String id, String newContent){
+        return noteRepository.findById(id).map(note ->{
+            note.setContent(newContent);
+            return noteRepository.save(note);
+        }).orElseThrow(() -> new RuntimeException("Note not found with id: "+ id));
+    }
+
+    
 }

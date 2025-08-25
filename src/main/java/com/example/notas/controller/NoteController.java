@@ -42,4 +42,22 @@ public class NoteController {
     public ResponseEntity<java.util.List<Note>> getAllNotes() {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateNote(@PathVariable String id, @RequestBody Map<String, String> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String newContent = body.get("content");
+            Note updatedNote = noteService.updateNote(id, newContent);
+            response.put("success", true);
+            response.put("message", "Note updated successfully");
+            response.put("note", updatedNote);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
 }

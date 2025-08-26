@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -83,4 +84,23 @@ class NoteServiceTest {
         verify(noteRepository, times(1)).deleteById("id123");
     }
 
+    @Test
+    void updateNote_shouldUpdateContent() {
+        // Arrange
+        Note existing = new Note("Old content");
+        existing.setIdNote("id123");
+
+        Note newNote = new Note("New content");
+
+        when(noteRepository.findById("id123")).thenReturn(Optional.of(existing));
+        when(noteRepository.save(any(Note.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Note updated = noteService.updateNote("id123", newNote);
+
+        // Assert
+        assertEquals("New content", updated.getContent());
+        verify(noteRepository, times(1)).findById("id123");
+        verify(noteRepository, times(1)).save(existing);
+    }
 }

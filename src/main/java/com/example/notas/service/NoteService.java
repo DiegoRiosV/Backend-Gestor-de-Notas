@@ -41,6 +41,6 @@ public class NoteService {
         return noteRepository.findById(id).map(note ->{
             note.setContent(newNote.getContent());
             return noteRepository.save(note);
-        }).orElseThrow(() -> new RuntimeException("Note not found with id: "+id));
+        }).orElseThrow(() -> new RuntimeException("Note not found with id: "+id));
     }
 }

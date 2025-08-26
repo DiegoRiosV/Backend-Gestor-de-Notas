@@ -103,4 +103,17 @@ class NoteServiceTest {
         verify(noteRepository, times(1)).findById("id123");
         verify(noteRepository, times(1)).save(existing);
     }
+
+    @Test
+    void updateNote_shouldThrowIfNotFound() {
+        // Arrange
+        Note newNote = new Note("New content");
+        when(noteRepository.findById("id123")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> noteService.updateNote("id123", newNote));
+
+        assertEquals("Note not found with id: id123", ex.getMessage());
+    }
 }

@@ -120,5 +120,4 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.content").value("Updated content"));
     }
 
-
 }

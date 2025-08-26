@@ -43,15 +43,13 @@ public class NoteController {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateNote(@PathVariable String id, @RequestBody Map<String, String> body) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteNote(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String newContent = body.get("content");
-            Note updatedNote = noteService.updateNote(id, newContent);
+            noteService.deleteNote(id);
             response.put("success", true);
-            response.put("message", "Note updated successfully");
-            response.put("note", updatedNote);
+            response.put("message", "Note deleted successfully");
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             response.put("success", false);
@@ -59,5 +57,4 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-
 }

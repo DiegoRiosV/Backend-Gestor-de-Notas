@@ -2,6 +2,7 @@ package com.controller;
 
 import com.example.notas.controller.NoteController;
 import com.example.notas.model.Note;
+import com.example.notas.repository.NoteRepository;
 import com.example.notas.service.NoteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,6 +28,9 @@ class NoteControllerTest {
 
     @Mock
     private NoteService noteService;
+
+    @Mock
+    private NoteRepository noteRepository;
 
     private ObjectMapper objectMapper;
 
@@ -69,4 +75,6 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$[0].idNote").value("id1"))
                 .andExpect(jsonPath("$[1].idNote").value("id2"));
     }
+
+
 }

@@ -29,12 +29,12 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
-    public Note updateNote(String id, String newContent){
-        return noteRepository.findById(id).map(note ->{
-            note.setContent(newContent);
-            return noteRepository.save(note);
-        }).orElseThrow(() -> new RuntimeException("Note not found with id: "+ id));
+
+    public void deleteNote(String id) {
+        if (!noteRepository.existsById(id)) {
+            throw new RuntimeException("Note not found with id: " + id);
+        }
+        noteRepository.deleteById(id);
     }
 
-    
 }

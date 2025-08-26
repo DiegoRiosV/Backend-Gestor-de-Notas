@@ -76,5 +76,17 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$[1].idNote").value("id2"));
     }
 
+    @Test
+    void deleteNote_shouldReturnSuccess() throws Exception {
+        // Arrange
+        doNothing().when(noteService).deleteNote("id123");
 
+        // Act & Assert
+        mockMvc.perform(delete("/api/notes/id123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Note deleted successfully"));
+
+        verify(noteService, times(1)).deleteNote("id123");
+    }
 }

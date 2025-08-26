@@ -78,15 +78,26 @@ class NoteControllerTest {
 
     @Test
     void deleteNote_shouldReturnSuccess() throws Exception {
-        // Arrange
         doNothing().when(noteService).deleteNote("id123");
 
-        // Act & Assert
         mockMvc.perform(delete("/api/notes/id123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Note deleted successfully"));
 
         verify(noteService, times(1)).deleteNote("id123");
+    }
+
+    @Test
+    void deleteNote_shouldReturn404IfNotFound() throws Exception {
+        // Arrange
+        doThrow(new RuntimeException("Note not found with id: id123"))
+                .when(noteService).deleteNote("id123");
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/notes/id123"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Note not found with id: id123"));
     }
 }

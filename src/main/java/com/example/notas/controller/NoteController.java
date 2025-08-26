@@ -57,4 +57,9 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+    @PutMapping("/{id}")
+    public Note updateNote(@PathVariable String id, @RequestBody Note newNote){
+        return noteService.updateNote(id,newNote);
+    }
 }

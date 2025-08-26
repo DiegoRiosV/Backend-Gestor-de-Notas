@@ -100,4 +100,24 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("Note not found with id: id123"));
     }
+
+    @Test
+    void updateNote_shouldReturnUpdatedNote() throws Exception {
+        // Arrange
+        Note updated = new Note("Updated content");
+        updated.setIdNote("id123");
+
+        when(noteService.updateNote(eq("id123"), any(Note.class))).thenReturn(updated);
+
+        Note body = new Note("Updated content");
+
+        // Act & Assert
+        mockMvc.perform(put("/api/notes/id123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idNote").value("id123"))
+                .andExpect(jsonPath("$.content").value("Updated content"));
+    }
+
 }

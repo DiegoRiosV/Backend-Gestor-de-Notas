@@ -42,4 +42,19 @@ public class NoteController {
     public ResponseEntity<java.util.List<Note>> getAllNotes() {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteNote(@PathVariable String id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            noteService.deleteNote(id);
+            response.put("success", true);
+            response.put("message", "Note deleted successfully");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }

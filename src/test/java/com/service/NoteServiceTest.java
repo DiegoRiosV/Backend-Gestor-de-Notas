@@ -69,4 +69,18 @@ class NoteServiceTest {
         
         verify(noteRepository, times(1)).findAll();
     }
+
+    @Test
+    void deleteNote_shouldDeleteIfExists() {
+        // Arrange
+        when(noteRepository.existsById("id123")).thenReturn(true);
+        doNothing().when(noteRepository).deleteById("id123");
+
+        // Act
+        noteService.deleteNote("id123");
+
+        // Assert
+        verify(noteRepository, times(1)).deleteById("id123");
+    }
+
 }

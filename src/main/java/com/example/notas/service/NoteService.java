@@ -28,4 +28,13 @@ public class NoteService {
     public java.util.List<Note> getAllNotes() {
         return noteRepository.findAll();
     }
+
+
+    public void deleteNote(String id) {
+        if (!noteRepository.existsById(id)) {
+            throw new RuntimeException("Note not found with id: " + id);
+        }
+        noteRepository.deleteById(id);
+    }
+
 }

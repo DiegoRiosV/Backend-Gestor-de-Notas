@@ -14,6 +14,16 @@ public class Note {
     @Column(name = "note")
     private String content;
 
+    @Column(name = "position_x")
+    private Integer positionX;
+
+    @Column(name = "position_y")
+    private Integer positionY;
+
+    @ManyToOne
+    @JoinColumn(name = "category", referencedColumnName = "category_id")
+    private Category category;
+
     public Note() {
     }
     public Note(String content) {
@@ -32,5 +42,29 @@ public class Note {
     }
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(Integer positionX) {
+        this.positionX = positionX;
+    }
+
+    public Integer getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(Integer positionY) {
+        this.positionY = positionY;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

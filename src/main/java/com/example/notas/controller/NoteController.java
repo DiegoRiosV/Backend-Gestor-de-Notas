@@ -31,6 +31,11 @@ public class NoteController {
             response.put("message", "Note saved successfully");
             response.put("note", savedNote);
             return ResponseEntity.ok(response);
+        
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Server error: " + e.getMessage());
@@ -59,7 +64,15 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    public Note updateNote(@PathVariable String id, @RequestBody Note newNote){
-        return noteService.updateNote(id,newNote);
+    public ResponseEntity<?> updateNote(@PathVariable String id, @RequestBody Note newNote) {
+        try {
+            Note updatedNote = noteService.updateNote(id, newNote);
+            return ResponseEntity.ok(updatedNote);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 }

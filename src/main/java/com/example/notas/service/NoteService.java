@@ -21,6 +21,18 @@ public class NoteService {
     }
 
     public Note saveNote(Note note) {
+        if (note.getContent() == null || note.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("Note content cannot be empty.");
+        }
+
+        if (note.getPositionX() == null) {
+            note.setPositionX(0); // Default X position
+        }
+
+        if (note.getPositionY() == null) {
+            note.setPositionY(0); // Default Y position
+        }
+        
         note.setIdNote(generateId());
         return noteRepository.save(note);
     }
@@ -37,10 +49,23 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
-    public Note updateNote(String id, Note newNote){
-        return noteRepository.findById(id).map(note ->{
-            note.setContent(newNote.getContent());
+    public Note updateNote(String id, Note newNoteDetails){
+        return noteRepository.findById(id).map(note -> {
+            
+            if (newNoteDetails.getContent() != null && !newNoteDetails.getContent().trim().isEmpty()) {
+                note.setContent(newNoteDetails.getContent());
+            }
+            
+            if (newNoteDetails.getPositionX() != null) {
+                note.setPositionX(newNoteDetails.getPositionX());
+            }
+            if (newNoteDetails.getPositionY() != null) {
+                note.setPositionY(newNoteDetails.getPositionY());
+            }
+            if (newNoteDetails.getCategory() != null) {
+                note.setCategory(newNoteDetails.getCategory());
+            }
             return noteRepository.save(note);
-        }).orElseThrow(() -> new RuntimeException("Note not found with id: "+id));
+        }).orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
     }
 }

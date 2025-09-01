@@ -75,4 +75,18 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+    @PutMapping("/{id}/position")
+    public ResponseEntity<Map<String, Object>> updatePosition(@PathVariable String id, @RequestBody Map<String, Integer> pos) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            noteService.updatePosition(id, pos.get("x"), pos.get("y"));
+            response.put("success", true);
+            response.put("message", "Note position updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }

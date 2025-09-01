@@ -68,4 +68,11 @@ public class NoteService {
             return noteRepository.save(note);
         }).orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
     }
+    public void updatePosition(String id, Integer x, Integer y) {
+        noteRepository.findById(id).map(note -> {
+            if (x != null) note.setPositionX(x);
+            if (y != null) note.setPositionY(y);
+            return noteRepository.save(note);
+        }).orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
+    }
 }

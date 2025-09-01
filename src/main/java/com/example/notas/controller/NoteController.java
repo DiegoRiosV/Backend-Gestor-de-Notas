@@ -76,7 +76,8 @@ public class NoteController {
         }
     }
     @PutMapping("/{id}/position")
-    public ResponseEntity<Map<String, Object>> updatePosition(@PathVariable String id, @RequestBody Map<String, Integer> pos) {
+    public ResponseEntity<Map<String, Object>> updatePosition(
+            @PathVariable String id, @RequestBody Map<String, Integer> pos) {
         Map<String, Object> response = new HashMap<>();
         try {
             noteService.updatePosition(id, pos.get("x"), pos.get("y"));

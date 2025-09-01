@@ -116,4 +116,36 @@ class NoteServiceTest {
 
         assertEquals("Note not found with id: id123", ex.getMessage());
     }
+    @Test
+    void updatePosition_shouldUpdateXandY() {
+        // Arrange
+        Note existing = new Note("Some content");
+        existing.setIdNote("id123");
+        existing.setPositionX(0);
+        existing.setPositionY(0);
+
+        when(noteRepository.findById("id123")).thenReturn(Optional.of(existing));
+        when(noteRepository.save(any(Note.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        noteService.updatePosition("id123", 100, 200);
+
+        // Assert
+        assertEquals(100, existing.getPositionX());
+        assertEquals(200, existing.getPositionY());
+        verify(noteRepository, times(1)).findById("id123");
+        verify(noteRepository, times(1)).save(existing);
+    }
+    @Test
+    void updatePosition_shouldThrowIfNotFound() {
+        // Arrange
+        when(noteRepository.findById("id123")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> noteService.updatePosition("id123", 100, 200));
+
+        assertEquals("Note not found with id: id123", ex.getMessage());
+    }
+
 }

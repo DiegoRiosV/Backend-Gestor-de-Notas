@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -154,4 +156,43 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.positionY").value(250))
                 .andExpect(jsonPath("$.category.categoryId").value("personal"));
     }
+    @Test
+    void updatePosition_shouldReturnSuccess() throws Exception {
+        // Arrange
+        String noteId = "id123";
+        Map<String, Integer> pos = Map.of("x", 150, "y", 300);
+
+        doNothing().when(noteService).updatePosition(noteId, 150, 300);
+
+        // Act & Assert
+        mockMvc.perform(put("/api/notes/" + noteId + "/position")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(pos)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Note position updated successfully"));
+
+        verify(noteService, times(1)).updatePosition(noteId, 150, 300);
+    }
+
+    @Test
+    void updatePosition_shouldReturn404IfNotFound() throws Exception {
+        // Arrange
+        String noteId = "id123";
+        Map<String, Integer> pos = Map.of("x", 150, "y", 300);
+
+        doThrow(new RuntimeException("Note not found with id: id123"))
+                .when(noteService).updatePosition(noteId, 150, 300);
+
+        // Act & Assert
+        mockMvc.perform(put("/api/notes/" + noteId + "/position")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(pos)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Note not found with id: id123"));
+
+        verify(noteService, times(1)).updatePosition(noteId, 150, 300);
+    }
+
 }

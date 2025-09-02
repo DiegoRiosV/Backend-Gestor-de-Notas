@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,11 +44,6 @@ public class NoteController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<java.util.List<Note>> getAllNotes() {
-        return ResponseEntity.ok(noteService.getAllNotes());
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteNote(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();
@@ -74,5 +70,14 @@ public class NoteController {
             response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Note>> getNotes(
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String search
+    ) {
+        List<Note> notes = noteService.searchAndFilterNotes(categoryId, search);
+        return ResponseEntity.ok(notes); 
     }
 }

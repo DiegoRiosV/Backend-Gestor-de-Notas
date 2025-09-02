@@ -5,6 +5,7 @@ import com.example.notas.repository.NoteRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -67,5 +68,24 @@ public class NoteService {
             }
             return noteRepository.save(note);
         }).orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
+    }
+
+    public List<Note> searchAndFilterNotes(String categoryId, String searchTerm) {
+        boolean hasCategory = categoryId != null && !categoryId.isEmpty();
+        boolean hasSearchTerm = searchTerm != null && !searchTerm.isEmpty();
+
+        if (hasCategory && hasSearchTerm) {
+            // Case 1: Filter by category AND search by term
+            return noteRepository.findByCategoryCategoryIdAndContentContainingIgnoreCase(categoryId, searchTerm);
+        } else if (hasCategory) {
+            // Case 2: Filter only by category
+            return noteRepository.findByCategoryCategoryId(categoryId);
+        } else if (hasSearchTerm) {
+            // Case 3: Search only by term
+            return noteRepository.findByContentContainingIgnoreCase(searchTerm);
+        } else {
+            // Case 4: No filters, return all notes
+            return noteRepository.findAll();
+        }
     }
 }

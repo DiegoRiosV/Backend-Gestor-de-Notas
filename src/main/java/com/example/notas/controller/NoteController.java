@@ -6,6 +6,11 @@ import com.example.notas.service.NoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/notes")
 @CrossOrigin(origins = "*") // permite llamadas desde Angular
+@Tag(name = "Gestión de Notas", description = "Endpoints para el CRUD completo y búsqueda de notas.")
 public class NoteController {
 
     private final NoteService noteService;
@@ -23,6 +29,11 @@ public class NoteController {
     }
 
     // POST /api/notes
+    @Operation(summary = "Crear una nueva nota")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Nota creada exitosamente."),
+        @ApiResponse(responseCode = "400", description = "Petición inválida (ej. contenido vacío).")
+    })
     @PostMapping
     public ResponseEntity<Map<String, Object>> createNote(@RequestBody Note note) {
         Map<String, Object> response = new HashMap<>();
@@ -44,6 +55,11 @@ public class NoteController {
         }
     }
 
+    @Operation(summary = "Eliminar una nota por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Nota eliminada exitosamente."),
+        @ApiResponse(responseCode = "404", description = "La nota no fue encontrada.")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteNote(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();
@@ -59,6 +75,11 @@ public class NoteController {
         }
     }
 
+    @Operation(summary = "Actualizar una nota existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Nota actualizada exitosamente."),
+        @ApiResponse(responseCode = "404", description = "La nota no fue encontrada.")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> updateNote(@PathVariable String id, @RequestBody Note newNote) {
         try {
@@ -72,6 +93,13 @@ public class NoteController {
         }
     }
 
+    @Operation(
+        summary = "Obtener notas con filtros opcionales",
+        description = "Devuelve una lista de notas. Se puede filtrar por categoría, por término de búsqueda en el contenido, o ambos."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación exitosa. Devuelve una lista de notas (puede estar vacía).")
+    })
     @GetMapping
     public ResponseEntity<List<Note>> getNotes(
             @RequestParam(required = false) String categoryId,
